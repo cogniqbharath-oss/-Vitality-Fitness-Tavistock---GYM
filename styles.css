@@ -200,12 +200,31 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(42, 42, 42, 0.9) 100%),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23ff6b35;stop-opacity:0.1" /><stop offset="100%" style="stop-color:%23004e89;stop-opacity:0.1" /></linearGradient></defs><rect width="1200" height="600" fill="url(%23grad)"/><circle cx="200" cy="150" r="100" fill="%23ff6b35" opacity="0.05"/><circle cx="1000" cy="450" r="150" fill="%23004e89" opacity="0.05"/></svg>');
-    background-size: cover;
-    background-position: center;
     padding-top: 80px;
     overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&h=1080&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 0;
+}
+
+.hero-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.85) 0%, rgba(42, 42, 42, 0.85) 100%);
 }
 
 .hero-overlay {
@@ -214,8 +233,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 50%, rgba(0, 78, 137, 0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(0, 78, 137, 0.15) 0%, transparent 50%);
+    z-index: 1;
 }
 
 .hero-content {
@@ -323,11 +343,12 @@ body {
 
 .expect-card {
     background: var(--dark-card);
-    padding: 2rem;
+    padding: 0;
     border-radius: 16px;
     border: 1px solid var(--border-color);
     text-align: center;
     transition: all 0.3s;
+    overflow: hidden;
 }
 
 .expect-card:hover {
@@ -336,16 +357,46 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
+.expect-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.expect-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.expect-card:hover .expect-image img {
+    transform: scale(1.1);
+}
+
 .expect-icon {
     width: 80px;
     height: 80px;
-    margin: 0 auto 1.5rem;
+    margin: -40px auto 1.5rem;
     background: var(--gradient-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
+    position: relative;
+    z-index: 2;
+    box-shadow: var(--shadow-md);
+}
+
+.expect-card h3,
+.expect-card p {
+    padding: 0 2rem;
+}
+
+.expect-card p {
+    padding-bottom: 2rem;
 }
 
 .expect-card h3 {
@@ -357,6 +408,71 @@ body {
 .expect-card p {
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+/* Gallery Section */
+.gallery-section {
+    padding: 100px 0;
+    background: linear-gradient(180deg, var(--dark-bg) 0%, rgba(26, 26, 26, 0.5) 100%);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+    padding: 2rem;
+    color: var(--text-primary);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+
+.gallery-overlay h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.gallery-overlay p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
 /* Memberships Section */
@@ -1195,6 +1311,10 @@ body {
         font-weight: 600;
     }
 
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
     .schedule-class::before {
         content: "Class: ";
         font-weight: 600;
@@ -1242,6 +1362,18 @@ body {
 
     .membership-card.featured:hover {
         transform: translateY(-10px);
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .expect-image {
+        height: 180px;
+    }
+
+    .hero-background {
+        background-attachment: scroll;
     }
 }
 

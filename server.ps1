@@ -1,8 +1,15 @@
 # Simple HTTP Server for Static Files
-$port = 8000
+$port = 8080
 $url = "http://localhost:$port/"
 
+# Get the directory where this script is located
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if (-not $scriptDir) {
+    $scriptDir = Get-Location
+}
+
 Write-Host "Starting server at $url" -ForegroundColor Green
+Write-Host "Serving from: $scriptDir" -ForegroundColor Cyan
 Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
 Write-Host ""
 
@@ -24,7 +31,7 @@ while ($listener.IsListening) {
         $localPath = "/index.html"
     }
     
-    $filePath = Join-Path $PSScriptRoot $localPath.TrimStart('/')
+    $filePath = Join-Path $scriptDir $localPath.TrimStart('/')
     
     if (Test-Path $filePath -PathType Leaf) {
         $content = [System.IO.File]::ReadAllBytes($filePath)
