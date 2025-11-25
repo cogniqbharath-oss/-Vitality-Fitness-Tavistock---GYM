@@ -158,9 +158,38 @@ function addChatbotMessage(message, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chatbot-message ${isUser ? 'user' : 'bot'}`;
     
-    const messageP = document.createElement('p');
-    messageP.textContent = message;
-    messageDiv.appendChild(messageP);
+    // Handle multi-line messages and lists
+    const lines = message.split('\n');
+    lines.forEach((line, index) => {
+        if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+            // Create list if it doesn't exist
+            let list = messageDiv.querySelector('ul');
+            if (!list) {
+                // If there was a previous paragraph, add list after it
+                const prevP = messageDiv.querySelector('p:last-child');
+                list = document.createElement('ul');
+                if (prevP) {
+                    prevP.after(list);
+                } else {
+                    messageDiv.appendChild(list);
+                }
+            }
+            const listItem = document.createElement('li');
+            listItem.textContent = line.trim().substring(1).trim();
+            list.appendChild(listItem);
+        } else if (line.trim()) {
+            const messageP = document.createElement('p');
+            messageP.textContent = line.trim();
+            messageDiv.appendChild(messageP);
+        }
+    });
+    
+    // If no content was added, add the message as-is
+    if (messageDiv.children.length === 0) {
+        const messageP = document.createElement('p');
+        messageP.textContent = message;
+        messageDiv.appendChild(messageP);
+    }
     
     chatbotMessages.appendChild(messageDiv);
     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
